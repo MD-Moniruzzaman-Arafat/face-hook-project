@@ -1,33 +1,71 @@
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+import Field from '../common/Field';
+
 export default function LoginForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
+  const navigate = useNavigate();
+
+  //   submit function
+  const submit = (data) => {
+    console.log(data);
+    reset();
+    navigate('/');
+  };
   return (
     <>
-      <form className="border-b border-[#3F3F3F] pb-10 lg:pb-[60px]">
+      <form
+        onSubmit={handleSubmit(submit)}
+        className="border-b border-[#3F3F3F] pb-10 lg:pb-[60px]"
+      >
         {/* <!-- email --> */}
-        <div className="form-control">
-          <label className="auth-label" for="email">
-            Email
-          </label>
-          <input className="auth-input" name="email" type="email" id="email" />
-        </div>
-        {/* <!-- password --> */}
-        <div className="form-control">
-          <label className="auth-label" for="email">
-            Password
-          </label>
+        <Field label="Email" htmlFor="email" error={errors.email?.message}>
           <input
-            className="auth-input"
+            {...register('email', {
+              required: 'email is required',
+              pattern: { value: /^\S+@\S+$/i, message: 'Invalid email' },
+            })}
+            className={`auth-input ${errors.email ? 'border-red-500' : ''}`}
+            name="email"
+            type="email"
+            id="email"
+          />
+        </Field>
+        {/* <!-- password --> */}
+        <Field
+          label="Password"
+          htmlFor="password"
+          error={errors.password?.message}
+        >
+          <input
+            {...register('password', {
+              required: 'password is required',
+              minLength: {
+                value: 8,
+                message: 'your password must be at least 8 characters long',
+              },
+            })}
+            className={`auth-input ${errors.password ? 'border-red-500' : ''}`}
             name="password"
             type="password"
             id="password"
           />
-        </div>
+        </Field>
         {/* <!-- Submit --> */}
-        <button
-          className="auth-input bg-lwsGreen font-bold text-deepDark transition-all hover:opacity-90"
-          type="submit"
-        >
-          Login
-        </button>
+        <Field>
+          <button
+            className="auth-input bg-lwsGreen font-bold text-deepDark transition-all hover:opacity-90"
+            type="submit"
+          >
+            Login
+          </button>
+        </Field>
       </form>
     </>
   );
