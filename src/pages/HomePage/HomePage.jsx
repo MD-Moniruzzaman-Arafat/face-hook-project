@@ -1,27 +1,23 @@
-import Navbar from '../../components/Navbar/Navbar';
 import PostCard from '../../components/PostCard/PostCard';
 import WhatsOnMind from '../../components/WhatsOnMind/WhatsOnMind';
 
 export default function HomePage() {
   return (
     <>
-      <Navbar />
-      <main className="mx-auto max-w-[1020px] py-8">
-        <div className="container">
-          {/* <!-- what's on mind --> */}
-          {/* <!-- On clicking the TextArea, Create New Post Modal will apear --> */}
-          <WhatsOnMind />
-          {/* <!-- end what's on mind --> */}
+      <div className="container">
+        {/* <!-- what's on mind --> */}
+        {/* <!-- On clicking the TextArea, Create New Post Modal will apear --> */}
+        <WhatsOnMind />
+        {/* <!-- end what's on mind --> */}
 
-          {/* <!-- post  --> */}
-          <PostCard />
-          {/* <!-- post ends --> */}
+        {/* <!-- post  --> */}
+        <PostCard />
+        {/* <!-- post ends --> */}
 
-          {/* <!-- post  --> */}
-          <PostCard />
-          {/* <!-- post ends --> */}
-        </div>
-      </main>
+        {/* <!-- post  --> */}
+        <PostCard />
+        {/* <!-- post ends --> */}
+      </div>
     </>
   );
 }

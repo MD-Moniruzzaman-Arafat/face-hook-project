@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import register from '../../assets/icons/registration.svg';
 import RegisterForm from '../../components/RegisterForm/RegisterForm';
 
@@ -32,12 +33,12 @@ export default function RegisterPage() {
               <div className="py-4 lg:py-4">
                 <p className="text-center text-xs text-gray-600/95 lg:text-sm">
                   Already have an account?
-                  <a
+                  <Link
                     className="hover:text-lwsGreen text-white transition-all hover:underline"
-                    href="/login.html"
+                    to={'/login'}
                   >
                     Login
-                  </a>
+                  </Link>
                 </p>
               </div>
             </div>
