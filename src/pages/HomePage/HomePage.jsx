@@ -1,9 +1,11 @@
+import Navbar from '../../components/Navbar/Navbar';
 import PostCard from '../../components/PostCard/PostCard';
 import WhatsOnMind from '../../components/WhatsOnMind/WhatsOnMind';
 
 export default function HomePage() {
   return (
     <>
+      <Navbar />
       <main className="mx-auto max-w-[1020px] py-8">
         <div className="container">
           {/* <!-- what's on mind --> */}
