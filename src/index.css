@@ -1,152 +1,60 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 @import 'tailwindcss';
+
 @plugin "@tailwindcss/typography";
+
+@theme {
+  --font-inter: 'Inter', 'sans-serif';
+  --color-lwsGreen: #00d991;
+  --color-deepDark: #17181c;
+  --color-mediumDark: #1e1f24;
+  --color-lighterDark: #27292f;
+}
+
+@utility container {
+  @apply mx-auto p-4;
+}
+
+@utility flex-center {
+  @apply flex items-center justify-center;
+}
+
+@utility card {
+  @apply rounded-md border border-[#3F3F3F] bg-mediumDark px-4 py-4 lg:px-7 lg:py-5;
+}
 
 @layer base {
   body {
-    background-color: #18181b; /* Replace with your deepDark color value */
-    font-family: 'Inter', sans-serif;
-    color: #f3f4f6; /* Replace with your gray-100 color value */
+    @apply bg-deepDark font-inter text-gray-100;
   }
 }
 
 @layer components {
-  .flex-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
   .btn-primary {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem; /* gap-2 */
-    border-radius: 0.375rem; /* rounded-md */
-    background-color: #23232a; /* bg-lighterDark, replace with your color */
-    padding-left: 1.25rem; /* px-5 */
-    padding-right: 1.25rem;
-    padding-top: 0.625rem; /* py-2.5 */
-    padding-bottom: 0.625rem;
-    font-size: 0.875rem; /* text-sm */
-    font-weight: 500; /* font-medium */
-    color: #fff; /* text-white */
-    transition: background-color 0.2s;
-  }
-  .btn-primary:hover {
-    background-color: #18181b; /* hover:bg-deepDark, replace with your color */
-  }
-  @media (min-width: 1024px) {
-    .btn-primary {
-      font-size: 1.125rem; /* lg:text-lg */
-    }
+    @apply flex-center gap-2 rounded-md bg-lighterDark px-5 py-2.5 text-sm font-medium text-white hover:bg-deepDark lg:text-lg;
   }
   .icon-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.375rem; /* rounded-md */
-    background-color: #23232a; /* bg-lighterDark */
-    padding: 0.375rem; /* p-1.5 */
-    font-weight: 500; /* font-medium */
-    color: #fff; /* text-white */
-    transition: background-color 0.2s;
-  }
-  .icon-btn:hover {
-    background-color: #18181b; /* hover:bg-deepDark */
-  }
-  .card {
-    border-radius: 0.375rem; /* rounded-md */
-    border: 1px solid #3f3f3f;
-    background-color: #23232a; /* Replace with your bg-mediumDark color value */
-    padding-left: 1rem; /* px-4 */
-    padding-right: 1rem;
-    padding-top: 1rem; /* py-4 */
-    padding-bottom: 1rem;
-  }
-  @media (min-width: 1024px) {
-    .card {
-      padding-left: 1.75rem; /* lg:px-7 */
-      padding-right: 1.75rem;
-      padding-top: 1.25rem; /* lg:py-5 */
-      padding-bottom: 1.25rem;
-    }
+    @apply flex-center rounded-md bg-lighterDark  p-1.5  font-medium  text-white hover:bg-deepDark;
   }
   .form-control {
-    margin-bottom: 1.5rem; /* mb-6 */
-  }
-  .form-control > * + * {
-    margin-top: 0.625rem; /* space-y-2.5 */
+    @apply mb-6 space-y-2.5;
   }
   .auth-label {
-    line-height: 1.38;
-  }
-  @media (min-width: 1024px) {
-    .auth-label {
-      font-size: 1.125rem; /* lg:text-lg */
-    }
+    @apply leading-[138%] lg:text-xl;
   }
   .auth-input {
-    width: 100%;
-    border-radius: 0.375rem; /* rounded-md */
-    border: 1px solid rgba(204, 204, 204, 0.14); /* border-[#CCCCCC]/[14%] */
-    background-color: #23232a; /* bg-lighterDark */
-    padding: 0.375rem; /* p-1.5 */
-    outline: none;
+    @apply w-full rounded-md border border-[#CCCCCC]/[14%] bg-lighterDark  p-1.5 focus:outline-hidden lg:p-3;
   }
-  @media (min-width: 1024px) {
-    .auth-input {
-      padding: 0.75rem; /* lg:p-3 */
-    }
-  }
-  .auth-input:focus {
-    outline: none;
-  }
-
   .post-avater {
-    max-width: 2.5rem; /* max-w-10 */
-    max-height: 2.5rem; /* max-h-10 */
-    border-radius: 9999px; /* rounded-full */
-  }
-  @media (min-width: 1024px) {
-    .post-avater {
-      max-width: 58px; /* lg:max-w-[58px] */
-      max-height: 58px; /* lg:max-h-[58px] */
-    }
+    @apply max-w-10 max-h-10 rounded-full lg:max-h-[58px] lg:max-w-[58px];
   }
 
   /* Action Modal */
   .action-modal-container {
-    position: absolute;
-    right: 100%;
-    top: 1.5rem; /* top-6 */
-    min-width: 200px;
-    border-radius: 0.375rem; /* from .card */
-    border: 1px solid #3f3f3f; /* from .card */
-    background-color: #23232a; /* from .card */
-    padding-left: 1rem; /* from .card */
-    padding-right: 1rem;
-    padding-top: 0.5rem; /* py-2 */
-    padding-bottom: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    /* divide-y divide-[#3F3F3F] */
-  }
-  .action-modal-container > button {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-top: 1px solid #3f3f3f;
-  }
-  .action-modal-container > button:first-child {
-    border-top: none;
+    @apply card absolute right-full top-6 min-w-[200px] divide-y divide-[#3F3F3F] py-2 [&>button]:py-2;
   }
 
   .action-menu-item {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    gap: 0.5rem; /* gap-2 */
-    color: #f3f4f6; /* text-gray-100 */
-    transition: all 0.2s;
+    @apply flex w-full items-center gap-2 text-gray-100 transition-all;
   }
 }
