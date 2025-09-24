@@ -4,6 +4,7 @@ import HomePage from '../pages/HomePage/HomePage';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import RegisterPage from '../pages/RegisterPage/RegisterPage';
+import PrivateRoute from './private/PrivateRoute';
 
 const routes = createBrowserRouter([
   {
@@ -12,11 +13,19 @@ const routes = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <HomePage />,
+        element: (
+          <PrivateRoute>
+            <HomePage />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/profile',
-        element: <ProfilePage />,
+        element: (
+          <PrivateRoute>
+            <ProfilePage />
+          </PrivateRoute>
+        ),
       },
 
       {

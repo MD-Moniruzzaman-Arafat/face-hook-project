@@ -1,7 +1,10 @@
 import PostCard from '../../components/PostCard/PostCard';
 import WhatsOnMind from '../../components/WhatsOnMind/WhatsOnMind';
+import useAuth from '../../hooks/useAuth';
 
 export default function HomePage() {
+  const { auth } = useAuth();
+  console.log('Auth from HomePage:', auth);
   return (
     <>
       <div className="container">
