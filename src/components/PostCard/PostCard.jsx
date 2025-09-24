@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import dots from '../../assets/icons/3dots.svg';
 import commentIcon from '../../assets/icons/comment.svg';
 import deleteIcon from '../../assets/icons/delete.svg';
@@ -10,6 +11,21 @@ import avatarIcon2 from '../../assets/images/avatars/avatar_2.png';
 import poster from '../../assets/images/poster.png';
 
 export default function PostCard() {
+  const [toggle, setToggle] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setToggle(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   return (
     <>
       <article className="card mt-6 lg:mt-8">
@@ -35,22 +51,24 @@ export default function PostCard() {
           {/* <!-- author info ends --> */}
 
           {/* <!-- action dot --> */}
-          <div className="relative">
-            <button>
+          <div className="relative" ref={menuRef}>
+            <button onClick={() => setToggle(!toggle)}>
               <img src={dots} alt="3dots of Action" />
             </button>
 
             {/* <!-- Action Menus Popup --> */}
-            <div className="action-modal-container">
-              <button className="action-menu-item hover:text-lwsGreen">
-                <img src={editIcon} alt="Edit" />
-                Edit
-              </button>
-              <button className="action-menu-item hover:text-red-500">
-                <img src={deleteIcon} alt="Delete" />
-                Delete
-              </button>
-            </div>
+            {toggle && (
+              <div className="action-modal-container">
+                <button className="action-menu-item hover:text-lwsGreen">
+                  <img src={editIcon} alt="Edit" />
+                  Edit
+                </button>
+                <button className="action-menu-item hover:text-red-500">
+                  <img src={deleteIcon} alt="Delete" />
+                  Delete
+                </button>
+              </div>
+            )}
           </div>
           {/* <!-- action dot ends --> */}
         </header>
