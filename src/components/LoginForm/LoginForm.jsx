@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import useAuth from '../../hooks/useAuth';
@@ -9,19 +10,41 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
     reset,
+    setError,
   } = useForm();
 
   const navigate = useNavigate();
   const { setAuth } = useAuth();
 
   //   submit function
-  const submit = (data) => {
-    console.log(data);
-    const user = { ...data };
-    setAuth({ user });
-    reset();
-    navigate('/');
+  const submit = async (data) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_BASE_URL}/auth/login`,
+        data
+      );
+
+      if (response.status === 200) {
+        const { token, user } = response.data;
+        if (token) {
+          const accessToken = token.token;
+          const refreshToken = token.refreshToken;
+          console.log('Access Token:', accessToken);
+          console.log('Refresh Token:', refreshToken);
+          setAuth({ user, accessToken, refreshToken });
+          reset();
+          navigate('/');
+        }
+      }
+    } catch (error) {
+      setError('apiError', {
+        type: 'manual',
+        message: 'Login failed',
+      });
+      console.error('Error during login:', error);
+    }
   };
+
   return (
     <>
       <form
@@ -61,6 +84,8 @@ export default function LoginForm() {
             id="password"
           />
         </Field>
+
+        <p className="text-red-500">{errors.apiError?.message}</p>
         {/* <!-- Submit --> */}
         <Field>
           <button

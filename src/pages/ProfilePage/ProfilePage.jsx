@@ -1,8 +1,41 @@
+import { useEffect, useState } from 'react';
 import editIcon from '../../assets/icons/edit.svg';
 import avatar from '../../assets/images/avatars/avatar_1.png';
 import PostCard from '../../components/PostCard/PostCard';
+import useAuth from '../../hooks/useAuth';
+import useAxios from '../../hooks/useAxios';
 
 export default function ProfilePage() {
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const api = useAxios();
+  const { auth } = useAuth();
+
+  useEffect(() => {
+    setLoading(true);
+    async function fetchUserData() {
+      try {
+        const response = await api.get(
+          `${import.meta.env.VITE_SERVER_BASE_URL}/profile/${auth?.user?.id}`
+        );
+        console.log(response?.data);
+        setUser(response?.data?.user);
+        setPosts(response?.data?.posts);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setLoading(false);
+      }
+    }
+    if (auth?.user?.id) {
+      fetchUserData();
+    }
+  }, [auth?.user?.id, api]);
+  console.log(user);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
       <div className="container">
@@ -19,22 +52,16 @@ export default function ProfilePage() {
           {/* <!-- name , email --> */}
           <div>
             <h3 className="text-2xl font-semibold text-white lg:text-[28px]">
-              Sumit Saha
+              {user?.firstName} {user?.lastName}
             </h3>
-            <p className="leading-[231%] lg:text-lg">sumitsaha@gmail.com</p>
+            <p className="leading-[231%] lg:text-lg">{user?.email}</p>
           </div>
 
           {/* <!-- bio --> */}
           <div className="mt-4 flex items-start gap-2 lg:mt-6">
             <div className="flex-1">
               <p className="leading-[188%] text-gray-400 lg:text-lg">
-                Sumit is an entrepreneurial visionary known for his exceptional
-                performance and passion for technology and business. He
-                established Analyzen in 2008 while he was a student at
-                Bangladesh University of Engineering & Technology (BUET).
-                Analyzen has since become a top-tier Web and Mobile Application
-                Development firm and the first Digital and Social Media
-                Marketing Agency in Bangladesh.
+                {user?.bio}
               </p>
             </div>
             {/* <!-- Edit Bio button. The Above bio will be editable when clicking on the button --> */}
@@ -48,13 +75,14 @@ export default function ProfilePage() {
 
         <h4 className="mt-6 text-xl lg:mt-8 lg:text-2xl">Your Posts</h4>
 
-        {/* <!-- post  --> */}
-        <PostCard />
-        {/* <!-- post ends --> */}
-
-        {/* <!-- post  --> */}
-        <PostCard />
-        {/* <!-- post ends --> */}
+        {/* <!-- posts --> */}
+        {posts && posts.length > 0 ? (
+          posts.map((post, idx) => (
+            <PostCard key={post.id || idx} post={post} />
+          ))
+        ) : (
+          <div>No posts found.</div>
+        )}
       </div>
     </>
   );
