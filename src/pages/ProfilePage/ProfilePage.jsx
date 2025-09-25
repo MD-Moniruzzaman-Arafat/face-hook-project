@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { actions } from '../../actions';
 import checkIcon from '../../assets/icons/check.svg';
 import editIcon from '../../assets/icons/edit.svg';
-import avatar from '../../assets/images/avatars/avatar_1.png';
 import PostCard from '../../components/PostCard/PostCard';
 import useAuth from '../../hooks/useAuth';
 import useAxios from '../../hooks/useAxios';
@@ -13,11 +12,12 @@ export default function ProfilePage() {
   const api = useAxios();
   const { auth } = useAuth();
   const [bio, setBio] = useState(state?.user?.bio);
+  const [isEditing, setIsEditing] = useState(false);
+  const fileUploadRef = useRef(null);
   // Sync local bio state with reducer user bio
   useEffect(() => {
     setBio(state?.user?.bio);
   }, [state?.user?.bio]);
-  const [isEditing, setIsEditing] = useState(false);
 
   const handleBioEdit = async () => {
     dispatch({ type: actions.profile.DATA_FETCHING });
@@ -37,6 +37,34 @@ export default function ProfilePage() {
     } catch (error) {
       console.error('Error updating bio:', error);
     }
+  };
+
+  const handleBtnClick = (e) => {
+    e.preventDefault();
+    fileUploadRef.current.addEventListener('change', async () => {
+      const formData = new FormData();
+      for (const file of fileUploadRef.current.files) {
+        formData.append('avatar', file);
+      }
+
+      try {
+        const response = await api.post(
+          `${import.meta.env.VITE_SERVER_BASE_URL}/profile/${
+            state?.user?.id
+          }/avatar`,
+          formData
+        );
+        if (response.status === 200) {
+          dispatch({
+            type: actions.profile.IMAGE_UPDATED,
+            data: response.data,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    fileUploadRef.current.click();
   };
 
   useEffect(() => {
@@ -71,11 +99,29 @@ export default function ProfilePage() {
         <div className="flex flex-col items-center py-8 text-center">
           {/* <!-- profile image --> */}
           <div className="relative mb-8 max-h-[180px] max-w-[180px] rounded-full lg:mb-11 lg:max-h-[218px] lg:max-w-[218px]">
-            <img className="max-w-full" src={avatar} alt="sumit saha" />
+            <img
+              className="max-w-full"
+              src={`${import.meta.env.VITE_SERVER_BASE_URL}/${
+                state?.user?.avatar
+              }`}
+              alt="sumit saha"
+            />
 
-            <button className="flex-center absolute bottom-4 right-4 h-7 w-7 rounded-full bg-black/50 hover:bg-black/80">
-              <img src={editIcon} alt="Edit" />
-            </button>
+            <form action="">
+              <button
+                onClick={handleBtnClick}
+                className="flex-center absolute bottom-4 right-4 h-7 w-7 rounded-full bg-black/50 hover:bg-black/80"
+              >
+                <img src={editIcon} alt="Edit" />
+              </button>
+              <input
+                type="file"
+                name="avatar"
+                id="avatar"
+                ref={fileUploadRef}
+                hidden
+              />
+            </form>
           </div>
           {/* <!-- name , email --> */}
           <div>
