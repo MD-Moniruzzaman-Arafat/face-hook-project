@@ -174,9 +174,7 @@ export default function ProfilePage() {
 
         {/* <!-- posts --> */}
         {state?.posts && state?.posts.length > 0 ? (
-          state?.posts.map((post, idx) => (
-            <PostCard key={post.id || idx} post={post} />
-          ))
+          state?.posts.map((post) => <PostCard key={post.id} post={post} />)
         ) : (
           <div>No posts found.</div>
         )}

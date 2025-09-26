@@ -6,13 +6,14 @@ import editIcon from '../../assets/icons/edit.svg';
 import likeIcon from '../../assets/icons/like.svg';
 import shareIcon from '../../assets/icons/share.svg';
 import timeIcon from '../../assets/icons/time.svg';
-import avatarIcon from '../../assets/images/avatars/avatar_1.png';
-import avatarIcon2 from '../../assets/images/avatars/avatar_2.png';
-import poster from '../../assets/images/poster.png';
+import useAvatar from '../../hooks/useAvatar';
+import { getDateDifferenceFromNow } from '../../utils';
+import Comment from '../Comment/Comment';
 
-export default function PostCard() {
+export default function PostCard({ post }) {
   const [toggle, setToggle] = useState(false);
   const menuRef = useRef(null);
+  const { avatarURL } = useAvatar(post);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -35,15 +36,15 @@ export default function PostCard() {
           <div className="flex items-center gap-3">
             <img
               className="max-w-10 max-h-10 rounded-full lg:max-h-[58px] lg:max-w-[58px]"
-              src={avatarIcon}
+              src={avatarURL}
               alt="avatar"
             />
             <div>
-              <h6 className="text-lg lg:text-xl">Sumit Saha</h6>
+              <h6 className="text-lg lg:text-xl">{post?.author?.name}</h6>
               <div className="flex items-center gap-1.5">
                 <img src={timeIcon} alt="time" />
                 <span className="text-sm text-gray-400 lg:text-base">
-                  12 min ago
+                  {getDateDifferenceFromNow(post?.createAt)}
                 </span>
               </div>
             </div>
@@ -78,18 +79,16 @@ export default function PostCard() {
         <div className="border-b border-[#3F3F3F] py-4 lg:py-5 lg:text-xl">
           {/* <!-- If Post has Image, Render this block --> */}
           <div className="flex items-center justify-center overflow-hidden">
-            <img className="max-w-full" src={poster} alt="poster" />
+            {post?.image && (
+              <img
+                className="max-w-full"
+                src={`${import.meta.env.VITE_SERVER_BASE_URL}/${post?.image}`}
+                alt="poster"
+              />
+            )}
+            {/* <img className="max-w-full" src={poster} alt="poster" /> */}
           </div>
-          <p>
-            Grateful for the incredible experience of serving as the President
-            of the Grand Jury board for this year's Digital Marketing Award
-            organized by Bangladesh Brand Forum. Judging the best digital
-            marketing campaigns was not just a responsibility but a journey of
-            appreciation for innovation and creativity. The judging process,
-            ensuring transparency, brought to light so many beautiful campaigns.
-            Cheers to the dynamic world of digital marketing! sdfasd asdca sdfa
-            sdca sdfa
-          </p>
+          <p>{post?.content && post?.content}</p>
         </div>
         {/* <!-- post body ends --> */}
 
@@ -104,7 +103,7 @@ export default function PostCard() {
           {/* <!-- Comment Button --> */}
           <button className="icon-btn space-x-2 px-6 py-3 text-xs lg:px-12 lg:text-sm">
             <img src={commentIcon} alt="Comment" />
-            <span>Comment(2)</span>
+            <span>Comment({post?.comments.length})</span>
           </button>
           {/* <!-- Share Button --> */}
 
@@ -122,7 +121,7 @@ export default function PostCard() {
           <div className="flex-center mb-3 gap-2 lg:gap-4">
             <img
               className="max-w-7 max-h-7 rounded-full lg:max-h-[34px] lg:max-w-[34px]"
-              src={avatarIcon}
+              src={avatarURL}
               alt="avatar"
             />
 
@@ -145,36 +144,10 @@ export default function PostCard() {
           {/* <!-- comments --> */}
           <div className="space-y-4 divide-y divide-lighterDark pl-2 lg:pl-3">
             {/* <!-- single comment --> */}
-            <div className="flex items-center gap-3 pt-4">
-              <img
-                className="max-w-6 max-h-6 rounded-full"
-                src={avatarIcon2}
-                alt="avatar"
-              />
-              <div>
-                <div className="flex gap-1 text-xs lg:text-sm">
-                  <span>Tapas Adhikari: </span>
-                  <span>Great Sumit Saha dada ❤</span>
-                </div>
-              </div>
-            </div>
-            {/* <!-- single comment ends --> */}
-
-            {/* <!-- single comment --> */}
-            <div className="flex items-center gap-3 pt-4">
-              <img
-                className="max-w-6 max-h-6 rounded-full"
-                src={avatarIcon}
-                alt="avatar"
-              />
-              <div>
-                <div className="flex gap-1 text-xs lg:text-sm">
-                  <span>Sumit Saha: </span>
-                  <span>Great Sumit Saha dada ❤</span>
-                </div>
-              </div>
-            </div>
-            {/* <!-- single comment ends --> */}
+            {post?.comments &&
+              post?.comments.map((comment) => (
+                <Comment key={comment?.id} comment={comment} />
+              ))}
           </div>
           {/* <!-- comments ends --> */}
         </div>
